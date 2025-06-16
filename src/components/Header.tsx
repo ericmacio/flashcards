@@ -1,11 +1,18 @@
 import { NavLink, useLocation } from 'react-router-dom';
 import { ROUTES } from '../constants';
 
+/**
+ * A persistent header component with navigation links and a badge for the active page.
+ */
 const Header = () => {
   const { pathname } = useLocation();
 
+  // Determines if a navigation link is active based on the current URL path.
   const isActive = (path: string) => pathname.startsWith(path);
 
+  /**
+   * A small badge component to indicate the currently active navigation link.
+   */
   const Badge = () => (
     <span className="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-pink-500"></span>
   );

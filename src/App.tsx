@@ -7,6 +7,9 @@ import StudyPage from './pages/StudyPage';
 import Layout from './components/Layout';
 import { ROUTES } from './constants';
 
+/**
+ * The main application component that defines the routing structure.
+ */
 function App() {
   return (
     <Routes>

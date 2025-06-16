@@ -5,6 +5,10 @@ interface FlashcardProps {
   card: FlashcardType;
 }
 
+/**
+ * A component that displays a flashcard with a front and back side.
+ * It features a click-to-flip animation.
+ */
 const Flashcard = ({ card }: FlashcardProps) => {
   const [isFlipped, setIsFlipped] = useState(false);
 

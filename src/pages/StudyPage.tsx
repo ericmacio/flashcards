@@ -1,10 +1,12 @@
 import { useParams, Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import Flashcard from '../components/Flashcard';
 import { ROUTES } from '../constants';
 import { useFlashcardDeck } from '../hooks/useFlashcardDeck';
 
 const StudyPage = () => {
   const { category } = useParams<{ category: string }>();
+  const [isFlipped, setIsFlipped] = useState(false);
   const {
     currentCard,
     currentIndex,
@@ -13,6 +15,21 @@ const StudyPage = () => {
     goToPreviousCard,
     hasCards,
   } = useFlashcardDeck(category);
+
+  useEffect(() => {
+    setIsFlipped(false);
+  }, [currentCard]);
+
+  const handleAnswer = (isCorrect: boolean) => {
+    // For now, just move to the next card.
+    // We'll add state tracking for incorrect answers later.
+    console.log(`Answered: ${isCorrect ? 'Correct' : 'Incorrect'}`);
+    goToNextCard();
+  };
+
+  const handleFlip = () => {
+    setIsFlipped(!isFlipped);
+  };
 
   if (!hasCards) {
     return (
@@ -38,9 +55,18 @@ const StudyPage = () => {
       </Link>
       <h1 className="text-5xl font-bold mb-8 capitalize">{category}</h1>
 
-      {currentCard && <Flashcard card={currentCard} />}
+      <div className="h-64 [perspective:1000px]">
+        {currentCard && (
+          <Flashcard
+            card={currentCard}
+            isFlipped={isFlipped}
+            onFlip={handleFlip}
+            onAnswer={handleAnswer}
+          />
+        )}
+      </div>
 
-      <div className="mt-8 flex items-center space-x-8">
+      <div className="mt-28 flex items-center space-x-8">
         <button
           onClick={goToPreviousCard}
           className="px-6 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg font-semibold transition"

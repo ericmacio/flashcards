@@ -2,6 +2,15 @@ import { test, expect } from '@playwright/test';
 
 test.describe('E2E Tests for Spanish Flashcards App', () => {
   test.beforeEach(async ({ page }) => {
+    // Inject CSS to disable all animations and transitions
+    await page.addStyleTag({
+      content: `
+        *, *::before, *::after {
+          transition-duration: 0s !important;
+          animation-duration: 0s !important;
+        }
+      `,
+    });
     // Go to the home page before each test
     await page.goto('/');
   });
@@ -71,5 +80,49 @@ test.describe('E2E Tests for Spanish Flashcards App', () => {
 
     // Check the card counter
     await expect(page.getByText('2 / 2')).toBeVisible();
+  });
+
+  test('should flip the card, show answer buttons, and advance to the next card', async ({
+    page,
+  }) => {
+    // Go to the "Animals" study category
+    await page.goto('/study/animals');
+
+    const cardContainer = page.getByTestId('flashcard-container');
+    const cardFront = page.getByTestId('flashcard-front');
+    const rightButton = page.getByRole('button', { name: /right/i });
+    const wrongButton = page.getByRole('button', { name: /wrong/i });
+    const card2FrontText = page.getByText('el perro');
+
+    // Check that the card is not flipped initially
+    await expect(cardContainer.locator('> div')).toHaveCSS(
+      'transform',
+      'none'
+    );
+    await expect(rightButton).not.toBeVisible();
+    await expect(wrongButton).not.toBeVisible();
+
+    // Click to flip the card
+    await cardFront.click();
+
+    // Check that the card is flipped
+    await expect(cardContainer.locator('> div')).not.toHaveCSS(
+      'transform',
+      'none'
+    );
+    await expect(rightButton).toBeVisible();
+    await expect(wrongButton).toBeVisible();
+
+    // Click the "Right" button
+    await rightButton.click();
+
+    // Check that the next card is shown and is not flipped
+    await expect(cardContainer.locator('> div')).toHaveCSS(
+      'transform',
+      'none'
+    );
+    await expect(card2FrontText).toBeVisible();
+    await expect(rightButton).not.toBeVisible();
+    await expect(wrongButton).not.toBeVisible();
   });
 }); 

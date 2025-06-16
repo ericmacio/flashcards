@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { flashcards } from '../data/flashcards';
+import { getStudyCategoryRoute } from '../constants';
 
 // Get unique categories from the flashcards data
 const categories = [...new Set(flashcards.map((card) => card.category))];
@@ -12,7 +13,7 @@ const CategorySelectionPage = () => {
         {categories.map((category) => (
           <Link
             key={category}
-            to={`/study/${category}`}
+            to={getStudyCategoryRoute(category)}
             className="px-8 py-4 bg-gray-800 hover:bg-gray-700 rounded-lg text-2xl font-semibold transition text-center capitalize"
           >
             {category}
